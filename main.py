@@ -1,5 +1,8 @@
+import gensim.parsing.preprocessing as gsp
 from bs4 import BeautifulSoup
+from gensim import utils
 from selenium import webdriver
+from operator import itemgetter
 
 
 def start_search():
@@ -14,7 +17,7 @@ def start_search():
     # Specify number of pages on google search, each page has 10 links
     n_pages = 2
     # Sites including with [Sample, Template, What, Frontpage, Definition, Generator] should remove
-    black_list = ['Sample', 'Template', 'What', 'Frontpage', 'Definition', 'Generator']
+    black_list = ['Sample', 'Template', 'What', 'Frontpage', 'Definition', 'Generator', 'Wikipedia']
     for page in range(1, n_pages):
         url = "http://www.google.com/search?q=" + query + "&start=" + str((page - 1) * 10)
         driver.get(url)
@@ -49,6 +52,51 @@ def start_search():
     return final_links, driver
 
 
+def clean_text(s):
+    # strip_tags: Removal of tags (like <html>...)
+    # strip_punctuation: Removal of punctuation (like ',','.'!'...)
+    # strip_multiple_whitespaces: Removal of multiple whitespaces in between texts
+    # strip_numeric: Removal of numerics
+    # remove_stopwords: Removal of stop words (such as 'at', 'to', 'the'...)
+    # strip_short: Removal of very short words
+    # stem_text: Stemming converting words to its root form (ex. played -> play)
+    filters = [
+        gsp.strip_tags,
+        gsp.strip_punctuation,
+        gsp.strip_multiple_whitespaces,
+        gsp.strip_numeric,
+        gsp.remove_stopwords,
+        gsp.strip_short,
+        gsp.stem_text
+    ]
+
+    # s = s.lower()
+    s = utils.to_unicode(s)
+    for f in filters:
+        s = f(s)
+    return s
+
+
+def calculate_text(soup):
+    whitelist = [
+        'p',
+        'li',
+        'div',
+    ]
+    node = []
+
+    text_elements = [t for t in soup.find_all(text=True) if t.parent.name in whitelist]
+    for text in text_elements:
+        node.append({
+            'Length': len(text),
+            'Content': text,
+        })
+
+    # Sort descending according to the amount of text in the DOM structure
+    node = sorted(node, key=itemgetter('Length'), reverse=True)
+    return node
+
+
 def enter_link(links, driver):
     documents = []
     i = 0
@@ -57,17 +105,24 @@ def enter_link(links, driver):
         driver.get(link["Link"])
         soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-        for script in soup(["script", "style"]):
-            script.decompose()
+        # for script in soup(["script", "style"]):
+        #     script.decompose()
+        #
+        # strips = list(soup.stripped_strings)
+        # documents.append({
+        #     'Index': i,
+        #     'Text': strips,
+        # })
+        # i += 1
 
-        strips = list(soup.stripped_strings)
-        documents.append({
-            'Index': i,
-            'Text': strips,
-        })
-        i += 1
+        # ---------------- Currently testing... -------------------
+        documents.append(calculate_text(soup))
+        documents.append("--------------------------------------------")
+        #   print(len(soup.select('div')))
+
         driver.back()
 
+    print(documents)
     driver.close()  # Close Chrome process
     return documents
 
@@ -78,8 +133,10 @@ def enter_link(links, driver):
 def main():
     links, driver = start_search()
     documents = enter_link(links, driver)
-    print(documents)
-    print(len(links))
+
+
+# print(documents)
+# print(len(links))
 
 
 main()
