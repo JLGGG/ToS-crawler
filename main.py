@@ -3,6 +3,9 @@ from bs4 import BeautifulSoup
 from gensim import utils
 from selenium import webdriver
 from operator import itemgetter
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 
 def start_search():
@@ -93,7 +96,32 @@ def calculate_text(soup):
         })
 
     # Sort descending according to the amount of text in the DOM structure
-    node = sorted(node, key=itemgetter('Length'), reverse=True)
+    # node = sorted(node, key=itemgetter('Length'), reverse=True)
+
+    df = pd.DataFrame(node)
+    df_cut = df[df['Length'] > 100]
+    # df_cut.sort_values(by='Length', inplace=True)
+    # print(f'{df_cut.index.min()}, {df_cut.index.max()}')
+    imin = df_cut.index.min()
+    imax = df_cut.index.max()
+
+    df_filtered = df.iloc[imin:imax]
+
+    # print(df.head())
+    # print(df.tail())
+
+    print(imin, imax)
+
+    print(df_filtered.head())
+    print(df_filtered.tail())
+
+    # plt.show()
+
+    # plt.bar(range(len(node)), node, align='center')
+    # plt.xticks(range(len(node)), node)
+    #
+    #
+    # plt.show()
     return node
 
 
