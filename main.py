@@ -99,6 +99,9 @@ def calculate_text(soup):
     # node = sorted(node, key=itemgetter('Length'), reverse=True)
 
     df = pd.DataFrame(node)
+    # TODO Need to set-up threshold using exploratory data analysis
+    # TODO Text preprocessing is necessary
+    # TODO Create pandas to store collected data
     df_cut = df[df['Length'] > 100]
     # df_cut.sort_values(by='Length', inplace=True)
     # print(f'{df_cut.index.min()}, {df_cut.index.max()}')
@@ -154,9 +157,6 @@ def enter_link(links, driver):
     driver.close()  # Close Chrome process
     return documents
 
-
-# TODO hyperlink navigation
-# TODO Code to calculate the amount of contents
 
 def main():
     links, driver = start_search()
