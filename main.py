@@ -8,6 +8,9 @@ from nltk.tokenize import word_tokenize
 from selenium import webdriver
 
 
+# import matplotlib.pyplot as plt
+
+
 def start_search():
     opt = webdriver.ChromeOptions()
     opt.add_experimental_option('prefs', {'intl.accept_languages': 'en,en_US'})
@@ -23,6 +26,7 @@ def start_search():
     # Sites including with [Sample, Template, What, Frontpage, Definition, Generator] should remove
     black_list = ['Sample', 'Template', 'What', 'Frontpage', 'Definition', 'Generator', 'Wikipedia']
     for page in range(1, n_pages):
+        # TODO How do I find the end point of crawler? Collect documents about 200k
         url = "http://www.google.com/search?q=" + query + "&start=" + str((page - 1) * 10)
         driver.get(url)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -90,8 +94,6 @@ def calculate_text(soup):
     # node = sorted(node, key=itemgetter('Length'), reverse=True)
 
     df = pd.DataFrame(node)
-    # TODO Need to set-up threshold using exploratory data analysis
-    # TODO Create pandas to store collected data
     df_cut = df[df['Length'] > 100]
     # df_cut.sort_values(by='Length', inplace=True)
 
@@ -99,15 +101,11 @@ def calculate_text(soup):
     df_cut_revised = df_cut.copy()
     df_cut_revised['Content'] = df_cut_revised['Content'].apply(clean_text)
     df_cut_revised['Length'] = df_cut_revised['Content'].apply(lambda x: len(x))
-    # print(df_cut)
-    # print(df_cut_revised)
 
     # Visualization
-    #  df.sort_values(by='Length', inplace=True, ascending=False)
-    #  df.plot(x='Content', y='Length')
-    #  plt.show()
-
-    # TODO : threshold 그래프 그릴 때 x 축?
+    # df.sort_values(by='Length', inplace=True, ascending=False)
+    # df.plot(x='Content', y='Length')
+    # plt.show()
 
     return df_cut_revised
 
@@ -121,10 +119,9 @@ def enter_link(links, driver):
         soup = BeautifulSoup(driver.page_source, 'html.parser')
 
         # ---------------- Currently testing... -------------------
-        # documents.append(calculate_text(soup))
-        # documents.append("--------------------------------------------")
         tdf = calculate_text(soup)
         df = pd.concat([df, tdf])
+        # TODO Save each web page, log file
         print(df)
 
         driver.back()
