@@ -1,16 +1,17 @@
-import gensim.parsing.preprocessing as gsp
-from bs4 import BeautifulSoup
-from gensim import utils
-from selenium import webdriver
-from operator import itemgetter
-import matplotlib.pyplot as plt
-import numpy as np
+import re
+
 import pandas as pd
+from bs4 import BeautifulSoup
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+from selenium import webdriver
 
 
 def start_search():
     opt = webdriver.ChromeOptions()
     opt.add_experimental_option('prefs', {'intl.accept_languages': 'en,en_US'})
+    opt.add_argument('headless')
     driver = webdriver.Chrome(options=opt)
     # driver = webdriver.Chrome()
 
@@ -55,28 +56,18 @@ def start_search():
     return final_links, driver
 
 
-def clean_text(s):
-    # strip_tags: Removal of tags (like <html>...)
-    # strip_punctuation: Removal of punctuation (like ',','.'!'...)
-    # strip_multiple_whitespaces: Removal of multiple whitespaces in between texts
-    # strip_numeric: Removal of numerics
-    # remove_stopwords: Removal of stop words (such as 'at', 'to', 'the'...)
-    # strip_short: Removal of very short words
-    # stem_text: Stemming converting words to its root form (ex. played -> play)
-    filters = [
-        gsp.strip_tags,
-        gsp.strip_punctuation,
-        gsp.strip_multiple_whitespaces,
-        gsp.strip_numeric,
-        gsp.remove_stopwords,
-        gsp.strip_short,
-        gsp.stem_text
-    ]
+stop_words = set(stopwords.words('english'))
+lemma = WordNetLemmatizer()
 
-    # s = s.lower()
-    s = utils.to_unicode(s)
-    for f in filters:
-        s = f(s)
+
+def clean_text(s):
+    s = re.sub('[^a-zA-Z]', ' ', s)  # Removing numbers and punctuation
+    s = str(s).lower()  # Convert all characters into lowercase
+    s = word_tokenize(s)  # Tokenization
+    s = [w for w in s if w not in stop_words]  # Removing stop words
+    s = [lemma.lemmatize(word=w, pos='v') for w in s]  # Lemmatization
+    s = [i for i in s if len(i) > 2]  # Remove the words having length <= 2
+    s = ' '.join(s)  # Converting list to string
     return s
 
 
@@ -100,71 +91,51 @@ def calculate_text(soup):
 
     df = pd.DataFrame(node)
     # TODO Need to set-up threshold using exploratory data analysis
-    # TODO Text preprocessing is necessary
     # TODO Create pandas to store collected data
     df_cut = df[df['Length'] > 100]
     # df_cut.sort_values(by='Length', inplace=True)
-    # print(f'{df_cut.index.min()}, {df_cut.index.max()}')
-    imin = df_cut.index.min()
-    imax = df_cut.index.max()
 
-    df_filtered = df.iloc[imin:imax]
+    # Text preprocessing
+    df_cut_revised = df_cut.copy()
+    df_cut_revised['Content'] = df_cut_revised['Content'].apply(clean_text)
+    df_cut_revised['Length'] = df_cut_revised['Content'].apply(lambda x: len(x))
+    # print(df_cut)
+    # print(df_cut_revised)
 
-    # print(df.head())
-    # print(df.tail())
+    # Visualization
+    #  df.sort_values(by='Length', inplace=True, ascending=False)
+    #  df.plot(x='Content', y='Length')
+    #  plt.show()
 
-    print(imin, imax)
+    # TODO : threshold 그래프 그릴 때 x 축?
 
-    print(df_filtered.head())
-    print(df_filtered.tail())
-
-    # plt.show()
-
-    # plt.bar(range(len(node)), node, align='center')
-    # plt.xticks(range(len(node)), node)
-    #
-    #
-    # plt.show()
-    return node
+    return df_cut_revised
 
 
 def enter_link(links, driver):
-    documents = []
-    i = 0
+    df = pd.DataFrame(columns=['Length', 'Content'])
+
     for link in links:
         print(f'Go to {link["Link"]}')
         driver.get(link["Link"])
         soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-        # for script in soup(["script", "style"]):
-        #     script.decompose()
-        #
-        # strips = list(soup.stripped_strings)
-        # documents.append({
-        #     'Index': i,
-        #     'Text': strips,
-        # })
-        # i += 1
-
         # ---------------- Currently testing... -------------------
-        documents.append(calculate_text(soup))
-        documents.append("--------------------------------------------")
-        #   print(len(soup.select('div')))
+        # documents.append(calculate_text(soup))
+        # documents.append("--------------------------------------------")
+        tdf = calculate_text(soup)
+        df = pd.concat([df, tdf])
+        print(df)
 
         driver.back()
 
-    print(documents)
     driver.close()  # Close Chrome process
-    return documents
+    # return documents
 
 
 def main():
     links, driver = start_search()
     documents = enter_link(links, driver)
-
-
-# print(documents)
-# print(len(links))
 
 
 main()
