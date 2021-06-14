@@ -1,4 +1,6 @@
+import os
 import re
+from pathlib import Path
 
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -21,12 +23,13 @@ def start_search():
     # Query to obtain links
     query = 'Terms of Service'
     links = []  # Initiate empty list to capture final results
+    # How do I find the endpoint of crawler? Collect documents about 200k
+    # No search endpoint. I just will collect documents about 200k amount.
     # Specify number of pages on google search, each page has 10 links
-    n_pages = 2
+    n_pages = 3
     # Sites including with [Sample, Template, What, Frontpage, Definition, Generator] should remove
     black_list = ['Sample', 'Template', 'What', 'Frontpage', 'Definition', 'Generator', 'Wikipedia']
     for page in range(1, n_pages):
-        # TODO How do I find the end point of crawler? Collect documents about 200k
         url = "http://www.google.com/search?q=" + query + "&start=" + str((page - 1) * 10)
         driver.get(url)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -75,11 +78,12 @@ def clean_text(s):
     return s
 
 
-def calculate_text(soup):
+def collect_ToS_text(soup):
     whitelist = [
         'p',
         'li',
         'div',
+        'span',
     ]
     node = []
 
@@ -90,49 +94,55 @@ def calculate_text(soup):
             'Content': text,
         })
 
-    # Sort descending according to the amount of text in the DOM structure
-    # node = sorted(node, key=itemgetter('Length'), reverse=True)
-
     df = pd.DataFrame(node)
     df_cut = df[df['Length'] > 100]
-    # df_cut.sort_values(by='Length', inplace=True)
 
     # Text preprocessing
     df_cut_revised = df_cut.copy()
     df_cut_revised['Content'] = df_cut_revised['Content'].apply(clean_text)
     df_cut_revised['Length'] = df_cut_revised['Content'].apply(lambda x: len(x))
+    final_df = df_cut_revised[df_cut_revised['Length'] > 10]
 
-    # Visualization
+    # Visualization code
     # df.sort_values(by='Length', inplace=True, ascending=False)
     # df.plot(x='Content', y='Length')
     # plt.show()
 
-    return df_cut_revised
+    return final_df
 
 
 def enter_link(links, driver):
     df = pd.DataFrame(columns=['Length', 'Content'])
+    super_filename = 'whole.csv'
 
+    i = 0
     for link in links:
         print(f'Go to {link["Link"]}')
         driver.get(link["Link"])
         soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-        # ---------------- Currently testing... -------------------
-        tdf = calculate_text(soup)
+        # Save each web page, log file
+        tdf = collect_ToS_text(soup)
+        path = os.getcwd() + "/data/"
+        sub_filename = f'{link["Title"]}.csv'
+        tdf.to_csv(Path(path + sub_filename), index=False)  # save each page
+        print(tdf)
+
         df = pd.concat([df, tdf])
-        # TODO Save each web page, log file
-        print(df)
+        if i % 10 == 0:
+            df.to_csv(Path(os.getcwd() + "/" + super_filename), index=False)
+        i += 1
 
         driver.back()
 
+    df.to_csv(Path(os.getcwd() + "/" + super_filename), index=False)  # save whole page's data
+    print(f'Number of sentences collected: {len(df)}')
     driver.close()  # Close Chrome process
-    # return documents
 
 
 def main():
     links, driver = start_search()
-    documents = enter_link(links, driver)
+    enter_link(links, driver)
 
 
 main()
