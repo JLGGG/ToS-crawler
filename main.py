@@ -154,12 +154,12 @@ def enter_link(links, driver, flag, duplicate_check, df):
             continue
 
         if flag == 0:
-                duplicate_check.append(link["Link"])
+            duplicate_check.append(link["Link"])
         elif flag == 1:
-                # Confirm already accessed link
-                if link["Link"] in duplicate_check:
-                    print("Accessed duplicate link. Return previous page.")
-                    continue
+            # Confirm already accessed link
+            if link["Link"] in duplicate_check:
+                print("Accessed duplicate link. Return previous page.")
+                continue
         try:
             print(f'Go to {link["Link"]}')
             driver.get(link["Link"])
