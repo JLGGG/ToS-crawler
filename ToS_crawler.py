@@ -11,8 +11,9 @@ from nltk.tokenize import word_tokenize
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from func_timeout import func_timeout, FunctionTimedOut
-# import nltk
+import nltk
 # nltk.download('stopwords')
+nltk.download('punkt')
 
 
 # import matplotlib.pyplot as plt # For visualization.
@@ -98,7 +99,7 @@ def clean_text(s):
     return s
 
 
-def collect_ToS_text(soup):
+def collect_ToS_text(soup, link):
     whitelist = [
         'p',
         'li',
@@ -129,15 +130,17 @@ def collect_ToS_text(soup):
     for text in text_elements:
         node.append({
             'Length': len(text),
-            'Content': text,
+            'Link': link,
+            'Original': text,
+            'Processed': text,
         })
 
     df = pd.DataFrame(node)
     df_cut = df[df['Length'] > 100]
 
     df_cut_revised = df_cut.copy()
-    df_cut_revised['Content'] = df_cut_revised['Content'].apply(clean_text) # Text preprocessing
-    df_cut_revised['Length'] = df_cut_revised['Content'].apply(lambda x: len(x))
+    df_cut_revised['Processed'] = df_cut_revised['Processed'].apply(clean_text) # Text preprocessing
+    df_cut_revised['Length'] = df_cut_revised['Processed'].apply(lambda x: len(x))
     final_df = df_cut_revised[df_cut_revised['Length'] > 10]
 
     # Visualization code
@@ -149,7 +152,7 @@ def collect_ToS_text(soup):
 
 
 def enter_link(links, driver, flag, duplicate_check, df):
-    super_filename = 'whole.csv'
+    super_filename = 'tos_data.csv'
     
     i = 0
     for link in links:
@@ -177,7 +180,7 @@ def enter_link(links, driver, flag, duplicate_check, df):
 
         # Save each web page, log file
         try:
-            tdf = collect_ToS_text(soup)
+            tdf = collect_ToS_text(soup, link["Link"])
         except KeyError:
             print("KeyError happens")
             continue
@@ -205,7 +208,7 @@ def enter_link(links, driver, flag, duplicate_check, df):
 
 def main():
     duplicate_check = []
-    df = pd.DataFrame(columns=['Length', 'Content'])
+    df = pd.DataFrame(columns=['Length', 'Link', 'Original', 'Processed'])
     links, driver = start_search('Terms of Service')
     df = enter_link(links, driver, 0, duplicate_check, df)
     links, driver = start_search('Terms of Conditions')
