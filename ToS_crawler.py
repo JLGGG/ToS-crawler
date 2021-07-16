@@ -12,7 +12,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from func_timeout import func_timeout, FunctionTimedOut
 import nltk
-# nltk.download('stopwords')
+nltk.download('stopwords')
 nltk.download('punkt')
 
 
@@ -36,14 +36,7 @@ def start_search(query):
     'not', 'click', 'spectrum', 'free', 'read', '?', 'tldr', 'court', 'include', 'add', 'whether',
     'practise', 'design', 'violating', 'welcome', 'watch', 'are', 'improving', 'about', 'creating',
     'vs.', 'versus', 'can', 'form', 'receive', 'euro', 'review', 'determining', 'to', 'in', 'apply']
-    whitelist = [
-        'terms', 
-        'condition',
-        'service', 
-        'use', 
-        'agreement',
-        'statement',
-    ]
+    whitelist = ['terms', 'condition', 'service', 'use', 'agreement', 'statement']
     
     for page in range(1, n_pages):
         url = "http://www.google.com/search?q=" + query + "&start=" + str((page - 1) * 10)
@@ -100,55 +93,63 @@ def clean_text(s):
 
 
 def collect_ToS_text(soup, link):
-    whitelist = [
-        'p',
-        'li',
-        'div',
-        'span',
-        'b',
-        'a',
-        'strong',
-        'font',
-    ]
-    blacklist = [
-        '[document]',
-        'noscript',
-        'header',
-        'html',
-        'meta',
-        'head', 
-        'input',
-        'script',
-        'style',
-        'title',
-    # there may be more elements you don't want, such as "style", etc.
-    ]
+    # whitelist = [
+    #     'p',
+    #     'li',
+    #    'div',
+    #    'span',
+    #    'b',
+    #    'a',
+    #    'strong',
+    #    'font',
+    # ]
+    # blacklist = [
+    #     '[document]',
+    #     'noscript',
+    #     'header',
+    #     'html',
+    #     'meta',
+    #     'head', 
+    #     'input',
+    #     'script',
+    #     'style',
+    #     'title',
+    # # there may be more elements you don't want, such as "style", etc.
+    # ]
     node = []
 
-    text_elements = [t for t in soup.find_all(text=True) if t.parent.name not in blacklist]
-    text_elements = [t for t in text_elements if t.parent.name in whitelist]
-    for text in text_elements:
-        node.append({
+    #text_elements = [t for t in soup.find_all(text=True) if t.parent.name not in blacklist]
+    #text_elements = [t for t in text_elements if t.parent.name in whitelist]
+    # for text in text_elements:
+    #     node.append({
+    #         'Length': len(text),
+    #         'Link': link,
+    #         'Original': text,
+    #         'Processed': text,
+    #     })
+    text = soup.get_text()
+    node.append({
             'Length': len(text),
             'Link': link,
             'Original': text,
-            'Processed': text,
+            # 'Processed': text,
         })
 
     df = pd.DataFrame(node)
-    df_cut = df[df['Length'] > 100]
+    # df_cut = df[df['Length'] > 100]
 
-    df_cut_revised = df_cut.copy()
-    df_cut_revised['Processed'] = df_cut_revised['Processed'].apply(clean_text) # Text preprocessing
-    df_cut_revised['Length'] = df_cut_revised['Processed'].apply(lambda x: len(x))
-    final_df = df_cut_revised[df_cut_revised['Length'] > 10]
+    # df_cut_revised = df_cut.copy()
+    # df_cut_revised['Processed'] = df_cut_revised['Processed'].apply(clean_text) # Text preprocessing
+    # df_cut_revised['Length'] = df_cut_revised['Processed'].apply(lambda x: len(x))
+    # final_df = df_cut_revised[df_cut_revised['Length'] > 10]
 
     # Visualization code
     # df.sort_values(by='Length', inplace=True, ascending=False)
     # df.plot(x='Content', y='Length')
     # plt.show()
 
-    return final_df
+    #return final_df
+    return df
 
 
 def enter_link(links, driver, flag, duplicate_check, df):
@@ -208,7 +209,8 @@ def enter_link(links, driver, flag, duplicate_check, df):
 
 def main():
     duplicate_check = []
-    df = pd.DataFrame(columns=['Length', 'Link', 'Original', 'Processed'])
+    # df = pd.DataFrame(columns=['Length', 'Link', 'Original', 'Processed'])
+    df = pd.DataFrame(columns=['Length', 'Link', 'Original'])
     links, driver = start_search('Terms of Service')
     df = enter_link(links, driver, 0, duplicate_check, df)
     links, driver = start_search('Terms of Conditions')
