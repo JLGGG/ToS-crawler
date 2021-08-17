@@ -36,8 +36,9 @@ def start_search(query):
     'not', 'click', 'spectrum', 'free', 'read', '?', 'tldr', 'court', 'include', 'add', 'whether',
     'practise', 'design', 'violating', 'welcome', 'watch', 'are', 'improving', 'about', 'creating',
     'vs.', 'versus', 'can', 'form', 'receive', 'euro', 'review', 'determining', 'to', 'in', 'apply']
-    whitelist = ['terms', 'condition', 'service', 'use', 'agreement', 'statement']
-    
+    # whitelist = ['terms', 'condition', 'service', 'use', 'agreement', 'statement'] Tos and T&C 
+    whitelist = ['privacy']
+
     for page in range(1, n_pages):
         url = "http://www.google.com/search?q=" + query + "&start=" + str((page - 1) * 10)
         driver.get(url)
@@ -153,7 +154,8 @@ def collect_ToS_text(soup, link):
 
 
 def enter_link(links, driver, flag, duplicate_check, df):
-    super_filename = 'tos_data.csv'
+    # super_filename = 'tos_data.csv'
+    super_filename = 'privacy_policy_data.csv'
     
     i = 0
     for link in links:
@@ -186,7 +188,8 @@ def enter_link(links, driver, flag, duplicate_check, df):
             print("KeyError happens")
             continue
 
-        path = os.getcwd() + "/data/"
+        path = os.getcwd() + "/data_privacy_policy/"
+        # path = os.getcwd() + "/data/"
         sub_filename = f'{link["Title"]}.csv'
         sub_filename = re.sub("[\/:*?\"<>|]", "", sub_filename)
         tdf.to_csv(Path(path + sub_filename), index=False)  # save each page
@@ -211,10 +214,12 @@ def main():
     duplicate_check = []
     # df = pd.DataFrame(columns=['Length', 'Link', 'Original', 'Processed'])
     df = pd.DataFrame(columns=['Length', 'Link', 'Original'])
-    links, driver = start_search('Terms of Service')
+    links, driver = start_search('Privacy Policy')
     df = enter_link(links, driver, 0, duplicate_check, df)
-    links, driver = start_search('Terms of Conditions')
-    enter_link(links, driver, 1, duplicate_check, df)
+    # links, driver = start_search('Terms of Service')
+    # df = enter_link(links, driver, 0, duplicate_check, df)
+    # links, driver = start_search('Terms of Conditions')
+    # enter_link(links, driver, 1, duplicate_check, df)
 
 
 main()
