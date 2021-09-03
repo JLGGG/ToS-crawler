@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>이용약관 및 개인정보처리방침</title>
+        <link rel="stylesheet" href="../static/style_tos_pp.css">
+    </head>
+    <body>
+        <h2 class="h2">홈페이지 이용 약관</h2>
+        <div class="agree">
+            <div tabindex="0">
+
+                {% for i, (data, prob, _enter_flag, _title_flag) in enumerate(zip(row_data_tos, probs_tos, enter_flag_tos, title_flag_tos)) %}
+                {% if (prob >= 0.9) and (_title_flag == 1) %}
+                    <h3><b><span style="color:red">{{data}}</span></b></h3>
+                {% elif (prob < 0.9 and prob >= 0.7) and (_title_flag == 1) %}
+                    <h3><b><span style="color:#ff7f00">{{data}}</span></b></h3>
+                {% elif (prob < 0.7 and prob >= 0.5) and (_title_flag == 1) %}
+                    <h3><b><span style="color:green">{{data}}</span></b></h3>
+                {% elif prob < 0.5 and (_title_flag == 1) %}
+                    <h3><b><span style="color:black">{{data}}</span></b></h3>
+            
+                {% elif (prob >= 0.9) and (_enter_flag == 1) %}
+                    <span style="color:red">{{data}}</span><br>    
+                {% elif (prob < 0.9 and prob >= 0.7) and (_enter_flag == 1) %} 
+                    <span style="color:#ff7f00">{{data}}</span><br>
+                {% elif (prob < 0.7 and prob >= 0.5) and (_enter_flag == 1) %} 
+                    <span style="color:green">{{data}}</span><br>
+                {% elif prob < 0.5 and (_enter_flag == 1) %} 
+                    <span style="color:black">{{data}}</span><br>
+
+                {% elif prob >= 0.9 %} 
+                    <span style="color:red">{{data}}</span>
+                {% elif prob < 0.9 and prob >= 0.7 %} 
+                    <span style="color:#ff7f00">{{data}}</span>
+                {% elif prob < 0.7 and prob >= 0.5 %} 
+                    <span style="color:green">{{data}}</span>
+                {% elif prob < 0.5 %} 
+                    <span style="color:black">{{data}}</span>
+
+                {% endif %}
+            {% endfor %}
+            
+            </div>
+            <p><input type="checkbox" id="chk1" name="agree"><label for="chk1">이용 약관에 동의합니다. (동의하지 않을 경우 가입되지 않습니다.)</label></p>
+        </div>
+        <br>
+        <h2 class="h2">홈페이지 개인정보처리방침</h2>
+        <div class="agree">
+            <div tabindex="0">
+
+                {% for i, (data, prob, _enter_flag, _title_flag) in enumerate(zip(row_data_pp, probs_pp, enter_flag_pp, title_flag_pp)) %}
+                {% if (prob >= 0.9) and (_title_flag == 1) %}
+                    <h3><b><span style="color:red">{{data}}</span></b></h3>
+                {% elif (prob < 0.9 and prob >= 0.7) and (_title_flag == 1) %}
+                    <h3><b><span style="color:#ff7f00">{{data}}</span></b></h3>
+                {% elif (prob < 0.7 and prob >= 0.5) and (_title_flag == 1) %}
+                    <h3><b><span style="color:green">{{data}}</span></b></h3>
+                {% elif prob < 0.5 and (_title_flag == 1) %}
+                    <h3><b><span style="color:black">{{data}}</span></b></h3>
+            
+                {% elif (prob >= 0.9) and (_enter_flag == 1) %}
+                    <span style="color:red">{{data}}</span><br>    
+                {% elif (prob < 0.9 and prob >= 0.7) and (_enter_flag == 1) %} 
+                    <span style="color:#ff7f00">{{data}}</span><br>
+                {% elif (prob < 0.7 and prob >= 0.5) and (_enter_flag == 1) %} 
+                    <span style="color:green">{{data}}</span><br>
+                {% elif prob < 0.5 and (_enter_flag == 1) %} 
+                    <span style="color:black">{{data}}</span><br>
+
+                {% elif prob >= 0.9 %} 
+                    <span style="color:red">{{data}}</span>
+                {% elif prob < 0.9 and prob >= 0.7 %} 
+                    <span style="color:#ff7f00">{{data}}</span>
+                {% elif prob < 0.7 and prob >= 0.5 %} 
+                    <span style="color:green">{{data}}</span>
+                {% elif prob < 0.5 %} 
+                    <span style="color:black">{{data}}</span>
+
+                {% endif %}
+            {% endfor %}
+            
+            </div>
+            <p><input type="checkbox" id="chk2" name="agree"><label for="chk2">개인정보처리방침에 동의합니다. (동의하지 않을 경우 가입되지 않습니다.)</label></p>
+        </div>
+
+        <a name='agreeBottom'></a>
+        <div class="btn_area double">
+            <span><a href="/" id="btnCancel" class="btn_type btn_default" role="button">취소</a></span>
+            <span><a onclick="confirm_agree()" id="btnAgree" class="btn_type btn_primary" role="button">확인</a></span>
+        </div>
+        <script>
+            function confirm_agree() { 
+                var chkbox = document.getElementsByName('agree'); 
+                var chk = false; 
+                for(var i=0 ; i<chkbox.length ; i++) { 
+                    if(chkbox[i].checked) { 
+                        chk = true; 
+                    } else { 
+                        chk = false; 
+                        break;
+                    } 
+                } 
+                
+                if(chk) { 
+                    alert("모든 약관에 동의하였습니다."); 
+                    window.location = "http://127.0.0.1:5000/sign_up";
+                    return false; 
+                } else { 
+                    alert("모든 약관에 동의해주세요.") 
+                } 
+            }
+        </script>
+    </body>
+</html>
