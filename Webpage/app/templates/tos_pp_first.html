@@ -12,29 +12,29 @@
 
                 {% for i, (data, prob, _enter_flag, _title_flag) in enumerate(zip(row_data_tos, probs_tos, enter_flag_tos, title_flag_tos)) %}
                 {% if (prob >= 0.9) and (_title_flag == 1) %}
-                    <h3><b><span style="color:red">{{data}}</span></b></h3>
+                    <h2><b><span style="color:#E03E3E">{{data}}</span></b></h2>
                 {% elif (prob < 0.9 and prob >= 0.7) and (_title_flag == 1) %}
-                    <h3><b><span style="color:#ff7f00">{{data}}</span></b></h3>
+                    <h2><span style="color:#D9730D">{{data}}</span></h2>
                 {% elif (prob < 0.7 and prob >= 0.5) and (_title_flag == 1) %}
-                    <h3><b><span style="color:green">{{data}}</span></b></h3>
+                    <h2><span style="color:#DFAB01">{{data}}</span></h2>
                 {% elif prob < 0.5 and (_title_flag == 1) %}
-                    <h3><b><span style="color:black">{{data}}</span></b></h3>
+                    <h2><span style="color:black">{{data}}</span></h2>
             
                 {% elif (prob >= 0.9) and (_enter_flag == 1) %}
-                    <span style="color:red">{{data}}</span><br>    
+                    <b><span style="color:#E03E3E">{{data}}</span></b><br><br>     
                 {% elif (prob < 0.9 and prob >= 0.7) and (_enter_flag == 1) %} 
-                    <span style="color:#ff7f00">{{data}}</span><br>
+                    <span style="color:#D9730D">{{data}}</span><br><br> 
                 {% elif (prob < 0.7 and prob >= 0.5) and (_enter_flag == 1) %} 
-                    <span style="color:green">{{data}}</span><br>
+                    <span style="color:#DFAB01">{{data}}</span><br><br> 
                 {% elif prob < 0.5 and (_enter_flag == 1) %} 
-                    <span style="color:black">{{data}}</span><br>
+                    <span style="color:black">{{data}}</span><br><br> 
 
                 {% elif prob >= 0.9 %} 
-                    <span style="color:red">{{data}}</span>
+                    <b><span style="color:#E03E3E">{{data}}</span></b>
                 {% elif prob < 0.9 and prob >= 0.7 %} 
-                    <span style="color:#ff7f00">{{data}}</span>
+                    <span style="color:#D9730D">{{data}}</span>
                 {% elif prob < 0.7 and prob >= 0.5 %} 
-                    <span style="color:green">{{data}}</span>
+                    <span style="color:#DFAB01">{{data}}</span>
                 {% elif prob < 0.5 %} 
                     <span style="color:black">{{data}}</span>
 
@@ -51,29 +51,29 @@
 
                 {% for i, (data, prob, _enter_flag, _title_flag) in enumerate(zip(row_data_pp, probs_pp, enter_flag_pp, title_flag_pp)) %}
                 {% if (prob >= 0.9) and (_title_flag == 1) %}
-                    <h3><b><span style="color:red">{{data}}</span></b></h3>
+                    <h2><b><span style="color:#E03E3E">{{data}}</span></b></h2>
                 {% elif (prob < 0.9 and prob >= 0.7) and (_title_flag == 1) %}
-                    <h3><b><span style="color:#ff7f00">{{data}}</span></b></h3>
+                    <h2><span style="color:#D9730D">{{data}}</span></h2>
                 {% elif (prob < 0.7 and prob >= 0.5) and (_title_flag == 1) %}
-                    <h3><b><span style="color:green">{{data}}</span></b></h3>
+                    <h2><span style="color:#DFAB01">{{data}}</span></h2>
                 {% elif prob < 0.5 and (_title_flag == 1) %}
-                    <h3><b><span style="color:black">{{data}}</span></b></h3>
+                    <h2><span style="color:black">{{data}}</span></h2>
             
                 {% elif (prob >= 0.9) and (_enter_flag == 1) %}
-                    <span style="color:red">{{data}}</span><br>    
+                    <b><span style="color:#E03E3E">{{data}}</span></b><br><br>     
                 {% elif (prob < 0.9 and prob >= 0.7) and (_enter_flag == 1) %} 
-                    <span style="color:#ff7f00">{{data}}</span><br>
+                    <span style="color:#D9730D">{{data}}</span><br><br> 
                 {% elif (prob < 0.7 and prob >= 0.5) and (_enter_flag == 1) %} 
-                    <span style="color:green">{{data}}</span><br>
+                    <span style="color:#DFAB01">{{data}}</span><br><br> 
                 {% elif prob < 0.5 and (_enter_flag == 1) %} 
-                    <span style="color:black">{{data}}</span><br>
+                    <span style="color:black">{{data}}</span><br><br> 
 
                 {% elif prob >= 0.9 %} 
-                    <span style="color:red">{{data}}</span>
+                    <b><span style="color:#E03E3E">{{data}}</span></b>
                 {% elif prob < 0.9 and prob >= 0.7 %} 
-                    <span style="color:#ff7f00">{{data}}</span>
+                    <span style="color:#D9730D">{{data}}</span>
                 {% elif prob < 0.7 and prob >= 0.5 %} 
-                    <span style="color:green">{{data}}</span>
+                    <span style="color:#DFAB01">{{data}}</span>
                 {% elif prob < 0.5 %} 
                     <span style="color:black">{{data}}</span>
 
