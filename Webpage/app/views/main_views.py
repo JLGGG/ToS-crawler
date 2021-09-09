@@ -16,8 +16,26 @@ def index():
 def sign_up():
     return render_template("sign_up.html")
 
-@bp.route('/tos_and_pp', methods=("POST", "GET"))
-def show_tos_pp():
+@bp.route('/tos_and_pp_control', methods=("POST", "GET"))
+def show_tos_pp_control():
+    for index, row in df.iterrows():
+        # prob_result = predict_sentence_threshold4(convert_text_to_bert_input(row['English']))
+        row['Percent'] = 0
+        df.iloc[index] = row
+
+    for index, row in df_pp.iterrows():
+        # prob_result = predict_sentence_threshold4(convert_text_to_bert_input(row['English']))
+        row['Percent'] = 0
+        df_pp.iloc[index] = row
+
+    return render_template('tos_pp.html', \
+            probs_tos=df.Percent.values.tolist(), row_data_tos=df.Korean.values.tolist(),\
+            enter_flag_tos=df.Tab.values.tolist(), title_flag_tos=df.Title.values.tolist(),\
+            probs_pp=df_pp.Percent.values.tolist(), row_data_pp=df_pp.Korean.values.tolist(),\
+            enter_flag_pp=df_pp.Tab.values.tolist(), title_flag_pp=df_pp.Title.values.tolist(), zip=zip, enumerate=enumerate)
+
+@bp.route('/tos_and_pp_test', methods=("POST", "GET"))
+def show_tos_pp_test():
     for index, row in df.iterrows():
         prob_result = predict_sentence_threshold4(convert_text_to_bert_input(row['English']))
         row['Percent'] = prob_result
@@ -28,7 +46,7 @@ def show_tos_pp():
         row['Percent'] = prob_result
         df_pp.iloc[index] = row
 
-    return render_template('tos_pp_first.html', \
+    return render_template('tos_pp.html', \
             probs_tos=df.Percent.values.tolist(), row_data_tos=df.Korean.values.tolist(),\
             enter_flag_tos=df.Tab.values.tolist(), title_flag_tos=df.Title.values.tolist(),\
             probs_pp=df_pp.Percent.values.tolist(), row_data_pp=df_pp.Korean.values.tolist(),\
@@ -46,7 +64,7 @@ def show_tos_pp_3():
         row['Percent'] = prob_result
         df_pp.iloc[index] = row
 
-    return render_template('tos_pp_threshold3.html', \
+    return render_template('tos_pp_prestudy.html', \
             probs_tos=df.Percent.values.tolist(), row_data_tos=df.Korean.values.tolist(),\
             enter_flag_tos=df.Tab.values.tolist(), title_flag_tos=df.Title.values.tolist(),\
             probs_pp=df_pp.Percent.values.tolist(), row_data_pp=df_pp.Korean.values.tolist(),\
@@ -64,7 +82,7 @@ def show_tos_pp_4():
         row['Percent'] = prob_result
         df_pp.iloc[index] = row
 
-    return render_template('tos_pp_threshold4.html', \
+    return render_template('tos_pp_prestudy.html', \
             probs_tos=df.Percent.values.tolist(), row_data_tos=df.Korean.values.tolist(),\
             enter_flag_tos=df.Tab.values.tolist(), title_flag_tos=df.Title.values.tolist(),\
             probs_pp=df_pp.Percent.values.tolist(), row_data_pp=df_pp.Korean.values.tolist(),\
