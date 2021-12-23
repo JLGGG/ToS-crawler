@@ -5,13 +5,13 @@ Terms of Service와 Privacy Policy는 중요한 법적 문서임에도 불구하
 1. Crawling data on the web: 
   - 구글 검색엔진에서 Terms of Service와 Privacy Policy를 crawler를 사용해서 crawling 합니다. Crawler code는 DataCollecting에 들어 있습니다.
 2. Data Preprocessing: 
-- Crawler로 부터 수집한 raw dataset을 전처리하여 crowdsoucing의 입력으로 변환하는 과정입니다. DataProcessing/clear_sentence_\*.ipynb를 사용해서 전처리를 합니다.
+  - Crawler로 부터 수집한 raw dataset을 전처리하여 crowdsoucing의 입력으로 변환하는 과정입니다. DataProcessing/clear_sentence_\*.ipynb를 사용해서 전처리를 합니다.
 3. Data Crowdsourcing: 
-- Amazon MTurk 후 dataset를 정제하는 postprocessing은 DataProcessing/mturk.ipynb를 사용합니다.
+  - Amazon MTurk 후 dataset를 정제하는 postprocessing은 DataProcessing/mturk.ipynb를 사용합니다.
 4. Create a language model for text classification: 
-- pre-trained BERT를 사용하여 Privacy 문장을 구분해주는 binary classification model을 만듭니다. 모델의 코드는 classification/privacy_classification_bert.ipynb를 사용합니다.
+  - pre-trained BERT를 사용하여 Privacy 문장을 구분해주는 binary classification model을 만듭니다. 모델의 코드는 classification/privacy_classification_bert.ipynb를 사용합니다.
 5. Create a test webpage for testing: 
-- User-study 시 사용할 test webpage 구현은 Flask 프레임워크를 사용해서 구현합니다. webpage의 코드는 Webpage에 있습니다.
+  - User-study 시 사용할 test webpage 구현은 Flask 프레임워크를 사용해서 구현합니다. webpage의 코드는 Webpage에 있습니다.
 
 Dataset에는 User-study 시 NLP의 입력으로 사용한 test dataset이 들어있습니다. NLP 훈련 시 사용한 dataset은 이메일로 요청 시 검토한 후 공유해드립니다.
 
