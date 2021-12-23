@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Pre-study</title>
+        <style> body{ width: 80%; margin: auto; line-height: 1.5em;} </style>
+    </head>
+    <body>
+        <div>
+            <h2><b>- Threshold=4 -</b></h2>
+            <h2><b>- 이용 약관 -</b></h2>
+            {% for i, (data, prob, _enter_flag, _title_flag) in enumerate(zip(row_data_tos, probs_tos, enter_flag_tos, title_flag_tos)) %}
+                {% if (prob >= 0.9) and (_title_flag == 1) %}
+                    <h3><b><span style="color:#E03E3E">{{data}}</span></b></h3>
+                {% elif (prob < 0.9 and prob >= 0.7) and (_title_flag == 1) %}
+                    <h3><span style="color: #D9730D">{{data}}</span></h3>
+                {% elif (prob < 0.7 and prob >= 0.5) and (_title_flag == 1) %}
+                    <h3><span style="color:#DFAB01">{{data}}</span></h3>
+                {% elif prob < 0.5 and (_title_flag == 1) %}
+                    <h3><span style="color:black">{{data}}</span></h3>
+    
+                {% elif (prob >= 0.9) and (_enter_flag == 1) %}
+                    <b><span style="color:#E03E3E">{{data}}</span></b><br><br>    
+                {% elif (prob < 0.9 and prob >= 0.7) and (_enter_flag == 1) %} 
+                    <span style="color:#D9730D">{{data}}</span><br><br>  
+                {% elif (prob < 0.7 and prob >= 0.5) and (_enter_flag == 1) %} 
+                    <span style="color:#DFAB01">{{data}}</span><br><br>  
+                {% elif prob < 0.5 and (_enter_flag == 1) %} 
+                    <span style="color:black">{{data}}</span><br><br>  
+
+                {% elif prob >= 0.9 %} 
+                    <b><span style="color:#E03E3E">{{data}}</span></b>
+                {% elif prob < 0.9 and prob >= 0.7 %} 
+                    <span style="color:#D9730D">{{data}}</span>
+                {% elif prob < 0.7 and prob >= 0.5 %} 
+                    <span style="color:#DFAB01">{{data}}</span>
+                {% elif prob < 0.5 %} 
+                    <span style="color:black">{{data}}</span>
+
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div>
+            <h2><b>- 개인정보처리방침 -</b></h2>
+            {% for i, (data, prob, _enter_flag, _title_flag) in enumerate(zip(row_data_pp, probs_pp, enter_flag_pp, title_flag_pp)) %}
+                {% if (prob >= 0.9) and (_title_flag == 1) %}
+                    <h3><b><span style="color:#E03E3E">{{data}}</span></b></h3>
+                {% elif (prob < 0.9 and prob >= 0.7) and (_title_flag == 1) %}
+                    <h3><span style="color: #D9730D">{{data}}</span></h3>
+                {% elif (prob < 0.7 and prob >= 0.5) and (_title_flag == 1) %}
+                    <h3><span style="color:#DFAB01">{{data}}</span></h3>
+                {% elif prob < 0.5 and (_title_flag == 1) %}
+                    <h3><span style="color:black">{{data}}</span></h3>
+    
+                {% elif (prob >= 0.9) and (_enter_flag == 1) %}
+                    <b><span style="color:#E03E3E">{{data}}</span></b><br><br>    
+                {% elif (prob < 0.9 and prob >= 0.7) and (_enter_flag == 1) %} 
+                    <span style="color:#D9730D">{{data}}</span><br><br>  
+                {% elif (prob < 0.7 and prob >= 0.5) and (_enter_flag == 1) %} 
+                    <span style="color:#DFAB01">{{data}}</span><br><br>  
+                {% elif prob < 0.5 and (_enter_flag == 1) %} 
+                    <span style="color:black">{{data}}</span><br><br>  
+
+                {% elif prob >= 0.9 %} 
+                    <b><span style="color:#E03E3E">{{data}}</span></b>
+                {% elif prob < 0.9 and prob >= 0.7 %} 
+                    <span style="color:#D9730D">{{data}}</span>
+                {% elif prob < 0.7 and prob >= 0.5 %} 
+                    <span style="color:#DFAB01">{{data}}</span>
+                {% elif prob < 0.5 %} 
+                    <span style="color:black">{{data}}</span>
+
+                {% endif %}
+            {% endfor %}
+        </div>
+    </body>
+</html>
