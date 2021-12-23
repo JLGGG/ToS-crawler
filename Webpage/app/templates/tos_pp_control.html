@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>이용약관 및 개인정보처리방침</title>
+        <link rel="stylesheet" href="../static/style_tos_pp.css">
+
+        <!-- Hotjar Tracking Code for My site -->
+        <script>
+            (function(h,o,t,j,a,r){
+                h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                h._hjSettings={hjid:2614390,hjsv:6};
+                a=o.getElementsByTagName('head')[0];
+                r=o.createElement('script');r.async=1;
+                r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+                a.appendChild(r);
+            })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+        </script>
+    </head>
+    <body>
+        <h2 class="h2">홈페이지 이용 약관</h2>
+        <div class="agree">
+            <div tabindex="0">
+
+                {% for i, (data, prob, _enter_flag, _title_flag) in enumerate(zip(row_data_tos, probs_tos, enter_flag_tos, title_flag_tos)) %}
+                {% if (prob >= 0.9) and (_title_flag == 1) %}
+                    <h2><b><span style="color:#E03E3E">{{data}}</span></b></h2>
+                {% elif (prob < 0.9 and prob >= 0.7) and (_title_flag == 1) %}
+                    <h2><span style="color:#D9730D">{{data}}</span></h2>
+                {% elif (prob < 0.7 and prob >= 0.5) and (_title_flag == 1) %}
+                    <h2><span style="color:#DFAB01">{{data}}</span></h2>
+                {% elif prob < 0.5 and (_title_flag == 1) %}
+                    <h2><span style="color:black">{{data}}</span></h2>
+            
+                {% elif (prob >= 0.9) and (_enter_flag == 1) %}
+                    <b><span style="color:#E03E3E">{{data}}</span></b><br><br>     
+                {% elif (prob < 0.9 and prob >= 0.7) and (_enter_flag == 1) %} 
+                    <span style="color:#D9730D">{{data}}</span><br><br> 
+                {% elif (prob < 0.7 and prob >= 0.5) and (_enter_flag == 1) %} 
+                    <span style="color:#DFAB01">{{data}}</span><br><br> 
+                {% elif prob < 0.5 and (_enter_flag == 1) %} 
+                    <span style="color:black">{{data}}</span><br><br> 
+
+                {% elif prob >= 0.9 %} 
+                    <b><span style="color:#E03E3E">{{data}}</span></b>
+                {% elif prob < 0.9 and prob >= 0.7 %} 
+                    <span style="color:#D9730D">{{data}}</span>
+                {% elif prob < 0.7 and prob >= 0.5 %} 
+                    <span style="color:#DFAB01">{{data}}</span>
+                {% elif prob < 0.5 %} 
+                    <span style="color:black">{{data}}</span>
+
+                {% endif %}
+            {% endfor %}
+            
+            </div>
+            <p><input type="checkbox" id="chk1" name="agree"><label for="chk1">이용 약관에 동의합니다. (동의하지 않을 경우 가입되지 않습니다.)</label></p>
+        </div>
+        <br>
+        <h2 class="h2">홈페이지 개인정보처리방침</h2>
+        <div class="agree">
+            <div tabindex="0">
+
+                {% for i, (data, prob, _enter_flag, _title_flag) in enumerate(zip(row_data_pp, probs_pp, enter_flag_pp, title_flag_pp)) %}
+                {% if (prob >= 0.9) and (_title_flag == 1) %}
+                    <h2><b><span style="color:#E03E3E">{{data}}</span></b></h2>
+                {% elif (prob < 0.9 and prob >= 0.7) and (_title_flag == 1) %}
+                    <h2><span style="color:#D9730D">{{data}}</span></h2>
+                {% elif (prob < 0.7 and prob >= 0.5) and (_title_flag == 1) %}
+                    <h2><span style="color:#DFAB01">{{data}}</span></h2>
+                {% elif prob < 0.5 and (_title_flag == 1) %}
+                    <h2><span style="color:black">{{data}}</span></h2>
+            
+                {% elif (prob >= 0.9) and (_enter_flag == 1) %}
+                    <b><span style="color:#E03E3E">{{data}}</span></b><br><br>     
+                {% elif (prob < 0.9 and prob >= 0.7) and (_enter_flag == 1) %} 
+                    <span style="color:#D9730D">{{data}}</span><br><br> 
+                {% elif (prob < 0.7 and prob >= 0.5) and (_enter_flag == 1) %} 
+                    <span style="color:#DFAB01">{{data}}</span><br><br> 
+                {% elif prob < 0.5 and (_enter_flag == 1) %} 
+                    <span style="color:black">{{data}}</span><br><br> 
+
+                {% elif prob >= 0.9 %} 
+                    <b><span style="color:#E03E3E">{{data}}</span></b>
+                {% elif prob < 0.9 and prob >= 0.7 %} 
+                    <span style="color:#D9730D">{{data}}</span>
+                {% elif prob < 0.7 and prob >= 0.5 %} 
+                    <span style="color:#DFAB01">{{data}}</span>
+                {% elif prob < 0.5 %} 
+                    <span style="color:black">{{data}}</span>
+
+                {% endif %}
+            {% endfor %}
+            
+            </div>
+            <p><input type="checkbox" id="chk2" name="agree"><label for="chk2">개인정보처리방침에 동의합니다. (동의하지 않을 경우 가입되지 않습니다.)</label></p>
+        </div>
+
+        <a name='agreeBottom'></a>
+        <div class="btn_area double">
+            <span><a href="/" id="btnCancel" class="btn_type btn_default" role="button">취소</a></span>
+            <span><a onclick="confirm_agree()" id="btnAgree" class="btn_type btn_primary" role="button">확인</a></span>
+        </div>
+        <script>
+            function confirm_agree() { 
+                var chkbox = document.getElementsByName('agree'); 
+                var chk = false; 
+                for(var i=0 ; i<chkbox.length ; i++) { 
+                    if(chkbox[i].checked) { 
+                        chk = true; 
+                    } else { 
+                        chk = false; 
+                        break;
+                    } 
+                } 
+                
+                if(chk) { 
+                    alert("모든 약관에 동의하였습니다."); 
+                    window.location = "http://sidlab.loca.lt/sign_up";
+                    return false; 
+                } else { 
+                    alert("모든 약관에 동의해주세요.") 
+                } 
+            }
+
+            
+        </script>
+    </body>
+</html>
