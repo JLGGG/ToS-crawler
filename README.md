@@ -3,7 +3,7 @@ Terms of Service와 Privacy Policy는 중요한 법적 문서임에도 불구하
 
 ## Process
 1. Crawling data on the web:   
-  구글 검색엔진에서 Terms of Service와 Privacy Policy를 crawler를 사용해서 crawling 합니다. Crawler code는 DataCollecting에 들어 있습니다.
+&nbsp;-구글 검색엔진에서 Terms of Service와 Privacy Policy를 crawler를 사용해서 crawling 합니다. Crawler code는 DataCollecting에 들어 있습니다.
 3. Data Preprocessing: 
   - Crawler로 부터 수집한 raw dataset을 전처리하여 crowdsoucing의 입력으로 변환하는 과정입니다. DataProcessing/clear_sentence_\*.ipynb를 사용해서 전처리를 합니다.
 4. Data Crowdsourcing: 
